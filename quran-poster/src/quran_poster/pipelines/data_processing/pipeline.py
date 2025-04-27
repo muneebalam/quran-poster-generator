@@ -24,26 +24,33 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs = ["blank_canvas", "background_image"],
                 outputs = "background_image_canvas",
             ),
-            # add arabic
+            # Get required text and calculate spacing
             node(
                 func=get_arabic_text,
                 inputs = ["params:text"],
                 outputs = "arabic_text",
             ),
             node(
-                func=add_arabic_text,
-                inputs = ["background_image_canvas", "params:text", "arabic_text"],
-                outputs = "arabic_text_canvas",
-            ),
-            # add english
-            node(
                 func=get_english_text,
                 inputs = ["params:text"],
                 outputs = "english_text",
             ),
             node(
+                func=calculate_line_y_positions,
+                inputs = ["arabic_text", "english_text", "params:text", "background_image_canvas"],
+                outputs = ["line_y_positions"],
+            ),
+
+            # add arabic
+            node(
+                func=add_arabic_text,
+                inputs = ["background_image_canvas", "params:text", "arabic_text", "line_y_positions"],
+                outputs = "arabic_text_canvas",
+            ),
+            # add english
+            node(
                 func=add_english_text,
-                inputs = ["arabic_text_canvas", "params:text", "english_text"],
+                inputs = ["arabic_text_canvas", "params:text", "english_text", "line_y_positions"],
                 outputs = "arabic_english_text_canvas",
             ),
         ]

@@ -9,6 +9,7 @@ from bidi.algorithm import get_display
 import re
 import textwrap
 
+# Basic utils to start --------------------------------------------------------
 def translate_dimensions_to_pixels(poster_width_in: float, poster_height_in: float) -> tuple[int, int]:
     return int(poster_width_in * 300), int(poster_height_in * 300)
 
@@ -21,6 +22,46 @@ def add_background_image(blank_canvas: Image.Image, background_image: Image.Imag
     blank_canvas.paste(background_image, (0, 0))
     return blank_canvas
 
+# Calculate spacing ------------------------------------------------------------
+def _clean_pos_tuple(pos_tuple: str) -> tuple[float, float]:
+    return tuple([float(x.strip()) for x in pos_tuple.replace("(", "").replace(")", "").split(",")])
+
+def calculate_space_dimensions_px(background_image_canvas: Image.Image, text_params: dict) -> tuple[int, int]:
+    tl = _clean_pos_tuple(text_params["english_tl"])
+    br = _clean_pos_tuple(text_params["english_br"])
+    w_in, h_in = background_image_canvas.size
+    tl_px = (tl[0] * w_in, tl[1] * h_in)
+    br_px = (br[0] * w_in, br[1] * h_in)
+    return br_px[0] - tl_px[0], br_px[1] - tl_px[1]
+
+def calculate_line_y_positions(ar_text: str, en_text: str, text_params: dict, background_image_canvas: Image.Image) -> tuple[tuple[int]]:
+    ar_lines = ar_text.split("\n")
+    en_lines = en_text.split("\n")
+    ar_font = ImageFont.truetype(text_params[f"arabic_font_path"], text_params["font_size"])
+    en_font = ImageFont.truetype(text_params[f"english_font_path"], text_params["font_size"])
+    draw = ImageDraw.Draw(background_image_canvas)
+
+    top_y = _clean_pos_tuple(text_params["english_tl"])[1]
+    space_width, space_height = calculate_space_dimensions_px(background_image_canvas, text_params)
+    lines_by_verse = []
+    for i in range(len(ar_lines)):
+        ar_line_w = draw.textlength(ar_lines[i], font=ar_font)
+        en_line_w = draw.textlength(en_lines[i], font=en_font)
+        lines_by_verse.append(max(ar_line_w, en_line_w) // space_width + 2) # to be safe
+
+    line_breaks = len(ar_lines) - 1
+    continuations = sum(lines_by_verse) - line_breaks
+    spacing_param = space_height / (3 * line_breaks + continuations)
+
+    line_y_positions = [[top_y * background_image_canvas.size[1]]]
+    for i in range(line_breaks):
+        line_y_positions.append([line_y_positions[-1][-1] + 3 * spacing_param])
+        for j in range(int(lines_by_verse[i])):
+            line_y_positions[-1].append(line_y_positions[-1][-1] + spacing_param)
+    return (line_y_positions,)
+            
+
+# Get text ---------------------------------------------------------------------
 def _get_text(text: dict, lang: str) -> tuple[str]:
     """Look up verses from sqlite database, downloading if needed"""
     # Get verses
@@ -64,11 +105,12 @@ def _clean_text(text: str) -> str:
         text = re.sub(r"<sup.*?</sup>", "", text)
     return text
 
-
-def _add_text(background_image_canvas: Image.Image, text: dict, lang: str, saved_text: list[str]) -> Image.Image:
+# Add text ---------------------------------------------------------------------
+def _add_text(background_image_canvas: Image.Image, text: dict, lang: str, saved_text: list[str], line_y_positions: list[list[float]]) -> Image.Image:
     font_path = text[f"{lang}_font_path"]
-    tl = [float(x.strip()) for x in text[f"{lang}_tl"].replace("(", "").replace(")", "").split(",")]
-    br = [float(x.strip()) for x in text[f"{lang}_br"].replace("(", "").replace(")", "").split(",")]
+    tl = _clean_pos_tuple(text[f"{lang}_tl"])
+    br = _clean_pos_tuple(text[f"{lang}_br"])
+    font_size = text["font_size"]
     
     # Calculate bounding box dimensions in pixels
     # https://github.com/python-pillow/Pillow/issues/3081
@@ -82,14 +124,6 @@ def _add_text(background_image_canvas: Image.Image, text: dict, lang: str, saved
     font = ImageFont.truetype(font_path, text["font_size"])
     draw = ImageDraw.Draw(background_image_canvas)
 
-    # TODO Redo the line breaks
-    new_verses = len(saved_text)
-    continuations = 0
-    for line in saved_text:
-        text_w = draw.textlength(line, font=font)
-        continuations += text_w // space_width
-
-    cur_top = tl_px[1]
     for i, line in enumerate(saved_text):
         if lang == "arabic":
             # line = arabic_reshaper.reshape(line)
@@ -119,18 +153,15 @@ def _add_text(background_image_canvas: Image.Image, text: dict, lang: str, saved
             lines = [line]
         if lang == "arabic":
             pass # lines = lines[::-1]
-        for line in lines:
+        for j, line in enumerate(lines):
+            y_needed = line_y_positions[i][j]
             if lang == "arabic":
                 line = arabic_reshaper.reshape(line)
                 line = get_display(line, base_dir = "R")
-                draw.text((right, cur_top), line, (0,0,0), font=font, anchor="rt")
-            else:
-                draw.text((left, cur_top), line, (0,0,0), font=font)
-            cur_top += text["intraline_spacing"]
-        cur_top -= text["intraline_spacing"] # one extra
+                draw.text((right, y_needed), line, (0,0,0), font=font, anchor="rt")
 
-        # At the end of each verse, newline spacing
-        cur_top += text["interline_spacing"]
+            else:
+                draw.text((left, y_needed), line, (0,0,0), font=font)
 
     return background_image_canvas
 
@@ -139,8 +170,8 @@ def get_arabic_text(text: dict) -> tuple[str]:
 def get_english_text(text: dict) -> tuple[str]:
     return _get_text(text, "english")
 
-def add_arabic_text(background_image_canvas: Image.Image, text: dict, saved_text_str: str) -> Image.Image:
-    return _add_text(background_image_canvas, text, "arabic", saved_text_str.split("\n"))
+def add_arabic_text(background_image_canvas: Image.Image, text: dict, saved_text_str: str, line_y_positions: list[list[float]]) -> Image.Image:
+    return _add_text(background_image_canvas, text, "arabic", saved_text_str.split("\n"), line_y_positions)
 
-def add_english_text(background_image_canvas: Image.Image, text: dict, saved_text_str: str) -> Image.Image:
-    return _add_text(background_image_canvas, text, "english", saved_text_str.split("\n"))
+def add_english_text(background_image_canvas: Image.Image, text: dict, saved_text_str: str, line_y_positions: list[list[float]]) -> Image.Image:
+    return _add_text(background_image_canvas, text, "english", saved_text_str.split("\n"), line_y_positions)
