@@ -2,7 +2,7 @@
 
 Given a background and specified ayahs, create a "poster" with English and Arabic.
 
-![data/03_primary/quran_poster.png]
+![example](quran-poster/data/03_primary/quran_poster.png)
 
 # Related work
 
