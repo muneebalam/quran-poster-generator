@@ -47,7 +47,6 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs = ["background_image_canvas", "params:text", "arabic_text", "line_y_positions"],
                 outputs = "arabic_text_canvas",
             ),
-            # add english
             node(
                 func=add_english_text,
                 inputs = ["arabic_text_canvas", "params:text", "english_text", "line_y_positions"],
