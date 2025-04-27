@@ -1,8 +1,67 @@
-ipython>=8.10
-jupyterlab>=3.0
-kedro-datasets[pandas-csvdataset, pandas-exceldataset, pandas-parquetdataset, plotly-plotlydataset, plotly-jsondataset, matplotlib-matplotlibwriter]>=3.0
-kedro-viz>=6.7.0
-kedro[jupyter]~=0.19.12
-notebook
-scikit-learn~=1.5.1
-seaborn~=0.12.1
+antlr4-python3-runtime==4.9.3
+appdirs==1.4.4
+arabic-reshaper==3.0.0
+arrow==1.3.0
+attrs==25.3.0
+binaryornot==0.4.4
+Bottleneck @ file:///croot/bottleneck_1731058641041/work
+build==1.2.2.post1
+cachetools==5.5.2
+certifi==2025.4.26
+chardet==5.2.0
+charset-normalizer==3.4.1
+click==8.1.8
+cookiecutter==2.6.0
+dynaconf==3.2.10
+fsspec==2025.3.2
+gitdb==4.0.12
+GitPython==3.1.44
+idna==3.10
+importlib_metadata==8.7.0
+importlib_resources==6.5.2
+Jinja2==3.1.6
+kedro==0.19.12
+kedro-datasets==7.0.0
+kedro-telemetry==0.6.2
+lazy_loader==0.4
+markdown-it-py==3.0.0
+MarkupSafe==3.0.2
+mdurl==0.1.2
+mkl-service==2.4.0
+mkl_fft @ file:///io/mkl313/mkl_fft_1730824109137/work
+mkl_random @ file:///io/mkl313/mkl_random_1730823916628/work
+more-itertools==10.7.0
+numexpr @ file:///croot/numexpr_1730215937391/work
+numpy @ file:///croot/numpy_and_numpy_base_1725470312869/work/dist/numpy-2.0.1-cp312-cp312-linux_x86_64.whl#sha256=e2374991344fa2241a2153ef3d550d3a1cd2d50cb1f1d51eddc82870abc88021
+omegaconf==2.3.0
+packaging==25.0
+pandas @ file:///croot/pandas_1732735089971/work/dist/pandas-2.2.3-cp312-cp312-linux_x86_64.whl#sha256=57b66702d418720ec8483f7c4ec7c08d41815316ad7ce09d5b7bbc34eefcfdfd
+parse==1.20.2
+pillow @ file:///croot/pillow_1744613067434/work
+platformdirs==4.3.7
+pluggy==1.5.0
+pre_commit_hooks==5.0.0
+Pygments==2.19.1
+pyproject_hooks==1.2.0
+python-bidi==0.6.6
+python-dateutil @ file:///croot/python-dateutil_1716495738603/work
+python-slugify==8.0.4
+pytoolconfig==1.3.1
+pytz @ file:///croot/pytz_1713974312559/work
+PyYAML==6.0.2
+requests==2.32.3
+rich==13.9.4
+rope==1.13.0
+ruamel.yaml==0.18.10
+ruamel.yaml.clib==0.2.12
+setuptools==75.8.0
+six @ file:///croot/six_1744271502820/work
+smmap==5.0.2
+text-unidecode==1.3
+toml==0.10.2
+types-python-dateutil==2.9.0.20241206
+typing_extensions==4.13.2
+tzdata @ file:///croot/python-tzdata_1690578112552/work
+urllib3==2.4.0
+wheel==0.45.1
+zipp==3.21.0

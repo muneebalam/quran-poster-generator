@@ -95,10 +95,18 @@
 #   filepath: data/08_reporting/dummy_confusion_matrix.png
 #   versioned: true
 
-arabic_text:
-  type: text.TextDataset
-  filepath: data/01_raw/arabic_text.txt
-english_text:
-  type: text.TextDataset
-  filepath: data/01_raw/english_text.txt
-  
+# arabic_text:
+#   type: text.TextDataset
+#   filepath: data/01_raw/arabic_text.txt
+# english_text:
+#   type: text.TextDataset
+#   filepath: data/01_raw/english_text.txt
+background_image: 
+  type: pillow.ImageDataset
+  filepath: data/01_raw/breathtaking-sunset-evening.jpg
+arabic_text_canvas:
+  type: pillow.ImageDataset
+  filepath: data/02_intermediate/arabic_only_poster.png
+arabic_english_text_canvas:
+  type: pillow.ImageDataset
+  filepath: data/03_primary/quran_poster.png

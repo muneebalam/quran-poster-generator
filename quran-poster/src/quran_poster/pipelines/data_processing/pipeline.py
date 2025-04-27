@@ -21,7 +21,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             # add background image
             node(
                 func=add_background_image,
-                inputs = ["blank_canvas", "params:background_image_path"],
+                inputs = ["blank_canvas", "background_image"],
                 outputs = "background_image_canvas",
             ),
             # add arabic
@@ -43,14 +43,8 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=add_english_text,
-                inputs = ["background_image_canvas", "params:text", "english_text"],
+                inputs = ["arabic_text_canvas", "params:text", "english_text"],
                 outputs = "arabic_english_text_canvas",
             ),
-            # save
-            node(
-                func=save_poster,
-                inputs = ["arabic_text_canvas", "params:output_path"],
-                outputs = None,
-            )
         ]
     )

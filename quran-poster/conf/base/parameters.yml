@@ -1,15 +1,15 @@
 poster_width_in: 8.5
 poster_height_in: 11
 
-background_image_path: "data/01_raw/quran_bg_1.jpg"
-
 text:
-  quran_surah: 1
+  quran_surah: 103
   include_basmalah: True
   quran_verse_start: 1
-  quran_verse_end: 6
-  arabic_font_path: "conf/base/fonts/Arabic-Font.ttf"
-  english_font_path: "conf/base/fonts/English-Font.ttf"
+  quran_verse_end: 4
+  # From https://github.com/0xzer0x/quran-companion/tree/main/assets/fonts
+  arabic_font_path: "data/01_raw/PakTypeNaskhBasic.ttf"
+  english_font_path: "data/01_raw/NotoSansDisplay.ttf"
+  font_size: 72
 
   # Bounding boxes for text
   # (0, 0) is top left corner
@@ -17,12 +17,15 @@ text:
   # (1, 0) is bottom left corner
   # (1, 1) is bottom right corner
   # Specify top left and bottom right corners
-  arabic_tl: (0.5, 0)
-  arabic_br: (1, 1)
-  english_tl: (0, 0)
-  english_br: (0.5, 1)
+  arabic_tl: (0.5, 0.1)
+  arabic_br: (0.9, 0.6)
+  english_tl: (0.1, 0.1)
+  english_br: (0.5, 0.6)
 
   english_source: "https://github.com/0xzer0x/quran-companion/raw/refs/heads/main/assets/translations/en_khattab.db"
   arabic_source: "https://github.com/0xzer0x/quran-companion/raw/refs/heads/main/assets/quran.db"
+
+  interline_spacing: 200
+  intraline_spacing: 80
 
 output_path: "data/03_primary/quran_poster.png"
