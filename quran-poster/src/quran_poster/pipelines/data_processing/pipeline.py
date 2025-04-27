@@ -21,7 +21,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             # add background image
             node(
                 func=add_background_image,
-                inputs = ["blank_canvas", "background_image"],
+                inputs = ["blank_canvas", "background_image", "params:background_alpha"],
                 outputs = "background_image_canvas",
             ),
             # Get required text and calculate spacing
