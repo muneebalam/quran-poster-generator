@@ -29,3 +29,10 @@ Create a virtual environment, e.g. through `conda`. Then install requirements.
 # Update log
 
 2025-04-27: first version
+
+# TODO
+
+- Automatic line spacing
+- Align spacing for English and Arabic
+- More font choices
+- Support font colors
