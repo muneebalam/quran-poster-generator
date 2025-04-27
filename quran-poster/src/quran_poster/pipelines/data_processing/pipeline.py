@@ -1,29 +1,11 @@
 from kedro.pipeline import Pipeline, node, pipeline
 
-from .nodes import create_model_input_table, preprocess_companies, preprocess_shuttles
+from .nodes import *
 
 
 def create_pipeline(**kwargs) -> Pipeline:
     return pipeline(
         [
-            node(
-                func=preprocess_companies,
-                inputs="companies",
-                outputs="preprocessed_companies",
-                name="preprocess_companies_node",
-            ),
-            node(
-                func=preprocess_shuttles,
-                inputs="shuttles",
-                outputs="preprocessed_shuttles",
-                name="preprocess_shuttles_node",
-            ),
-            node(
-                func=create_model_input_table,
-                inputs=["preprocessed_shuttles", "preprocessed_companies", "reviews"],
-                outputs="model_input_table",
-                name="create_model_input_table_node",
-            ),
             # translate desired dimensions into pixels
             node(
                 func=translate_dimensions_to_pixels,
@@ -42,15 +24,33 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs = ["blank_canvas", "params:background_image_path"],
                 outputs = "background_image_canvas",
             ),
-            # add desired user quran text and bounding box into font size
+            # add arabic
+            node(
+                func=get_arabic_text,
+                inputs = ["params:text"],
+                outputs = "arabic_text",
+            ),
             node(
                 func=add_arabic_text,
-                inputs = ["background_image_canvas", "params:text"],
+                inputs = ["background_image_canvas", "params:text", "arabic_text"],
                 outputs = "arabic_text_canvas",
             ),
-            # add arabic
-            # repeat for english
-            # Add english
+            # add english
+            node(
+                func=get_english_text,
+                inputs = ["params:text"],
+                outputs = "english_text",
+            ),
+            node(
+                func=add_english_text,
+                inputs = ["background_image_canvas", "params:text", "english_text"],
+                outputs = "arabic_english_text_canvas",
+            ),
             # save
+            node(
+                func=save_poster,
+                inputs = ["arabic_text_canvas", "params:output_path"],
+                outputs = None,
+            )
         ]
     )

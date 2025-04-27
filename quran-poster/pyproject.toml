@@ -40,3 +40,6 @@ attr = "quran_poster.__version__"
 [tool.setuptools.packages.find]
 where = [ "src",]
 namespaces = false
+
+[tool.kedro_telemetry]
+project_id = "6c6e4c1fc7c14b839e009dab85606826"

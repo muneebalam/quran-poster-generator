@@ -1,11 +1,11 @@
 poster_width_in: 8.5
 poster_height_in: 11
 
-background_image_path: "conf/base/images/background.png"
+background_image_path: "data/01_raw/quran_bg_1.jpg"
 
 text:
   quran_surah: 1
-  # 1 will include basmalah
+  include_basmalah: True
   quran_verse_start: 1
   quran_verse_end: 6
   arabic_font_path: "conf/base/fonts/Arabic-Font.ttf"
@@ -22,4 +22,7 @@ text:
   english_tl: (0, 0)
   english_br: (0.5, 1)
 
+  english_source: "https://github.com/0xzer0x/quran-companion/raw/refs/heads/main/assets/translations/en_khattab.db"
+  arabic_source: "https://github.com/0xzer0x/quran-companion/raw/refs/heads/main/assets/quran.db"
 
+output_path: "data/03_primary/quran_poster.png"
