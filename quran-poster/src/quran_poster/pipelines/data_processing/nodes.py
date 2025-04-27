@@ -17,10 +17,11 @@ def translate_dimensions_to_pixels(poster_width_in: float, poster_height_in: flo
 def create_blank_canvas(poster_width_px: int, poster_height_px: int) -> Image.Image:
     return Image.new("RGBA", (poster_width_px, poster_height_px), (255, 255, 255, 0))
 
-def add_background_image(blank_canvas: Image.Image, background_image: Image.Image) -> Image.Image:
+def add_background_image(blank_canvas: Image.Image, background_image: Image.Image, background_alpha: int) -> Image.Image:
     #background_image = Image.open(background_image_path)
     background_image = background_image.resize(blank_canvas.size)
     blank_canvas.paste(background_image, (0, 0))
+    blank_canvas.putalpha(background_alpha)
     return blank_canvas
 
 # Calculate spacing ------------------------------------------------------------
@@ -52,13 +53,13 @@ def calculate_line_y_positions(ar_text: str, en_text: str, text_params: dict, ba
 
     line_breaks = len(ar_lines) - 1
     continuations = sum(lines_by_verse) - line_breaks
-    spacing_param = space_height / (3 * line_breaks + continuations)
+    spacing_param = space_height / (3 * line_breaks + 1.3 * continuations)
 
     line_y_positions = [[top_y * background_image_canvas.size[1]]]
     for i in range(line_breaks):
         line_y_positions.append([line_y_positions[-1][-1] + 3 * spacing_param])
         for j in range(int(lines_by_verse[i])):
-            line_y_positions[-1].append(line_y_positions[-1][-1] + spacing_param)
+            line_y_positions[-1].append(line_y_positions[-1][-1] + 1.3 * spacing_param)
     return (line_y_positions,)
             
 

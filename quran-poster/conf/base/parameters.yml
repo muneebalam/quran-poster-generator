@@ -3,7 +3,10 @@
 # If your picture has different dimensions, it will get resized and may look weird. 
 # Crop to avoid this issue
 poster_width_in: 8.5
-poster_height_in: 11
+poster_height_in: 20
+
+# Scale of 0 to 255, where 0 is fully transparent and 255 is fully opaque
+background_alpha: 150
 
 text:
   # Adjust these as needed
