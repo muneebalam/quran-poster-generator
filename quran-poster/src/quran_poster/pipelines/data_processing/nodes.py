@@ -5,6 +5,7 @@ import os
 import pandas as pd
 import numpy as np
 import arabic_reshaper
+from arabic_reshaper import ArabicReshaper
 from bidi.algorithm import get_display
 import re
 import textwrap
@@ -156,7 +157,16 @@ def _add_text(background_image_canvas: Image.Image, text: dict, lang: str, saved
         for j, line in enumerate(lines):
             y_needed = line_y_positions[i][j]
             if lang == "arabic":
-                line = arabic_reshaper.reshape(line)
+                reshaper = arabic_reshaper.ArabicReshaper(
+                    arabic_reshaper.config_for_true_type_font(
+                        text["english_font_path"],
+                        arabic_reshaper.ENABLE_ALL_LIGATURES
+                    )
+                )
+                reshaper = ArabicReshaper(configuration={"delete_harakat": "no",
+                                                         "support_ligatures": "yes",
+                                                          "RIAL SIGN": "yes"})
+                line = reshaper.reshape(line)
                 line = get_display(line, base_dir = "R")
                 draw.text((right, y_needed), line, (0,0,0), font=font, anchor="rt")
 

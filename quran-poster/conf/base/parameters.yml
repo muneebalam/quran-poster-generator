@@ -13,8 +13,9 @@ text:
   quran_verse_end: 4
 
   # From https://github.com/0xzer0x/quran-companion/tree/main/assets/fonts
+  # Also from https://github.com/marwan/indopak-quran-text/blob/master/Fonts/v4.2.2%20-%20NORMAL%20SPACING/With%20Waqf%20Lazim%20Indicator/AlQuran-IndoPak-by-QuranWBW.v.4.2.2-WL.ttf
   # Don't touch these unless you know what you're doing
-  arabic_font_path: "data/01_raw/PakTypeNaskhBasic.ttf"
+  arabic_font_path: "data/01_raw/quran_font.ttf"
   english_font_path: "data/01_raw/NotoSansDisplay.ttf"
 
   # Adjust this as needed
@@ -35,9 +36,6 @@ text:
   english_source: "https://github.com/0xzer0x/quran-companion/raw/refs/heads/main/assets/translations/en_khattab.db"
   arabic_source: "https://github.com/0xzer0x/quran-companion/raw/refs/heads/main/assets/quran.db"
 
-  # Adjust these as needed
-  interline_spacing: 200
-  intraline_spacing: 80
 
 # Don't touch this
 output_path: "data/03_primary/quran_poster.png"
