@@ -6,6 +6,11 @@ Given a background and specified ayahs, create a "poster" with English and Arabi
 
 # Related work
 
+- [Quran image generator](https://github.com/ZeyadAbbas/quran-image-generator)
+- [Quran.com images](https://github.com/quran/quran.com-images)
+- [Quran companion](https://github.com/0xzer0x/quran-companion)
+- [Indopak font](https://github.com/marwan/indopak-quran-text)
+
 # Setup
 
 Create a virtual environment, e.g. through `conda`. Then install requirements.
@@ -32,7 +37,4 @@ Create a virtual environment, e.g. through `conda`. Then install requirements.
 
 # TODO
 
-- Automatic line spacing
-- Align spacing for English and Arabic
 - More font choices
-- Support font colors

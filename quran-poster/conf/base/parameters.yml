@@ -12,13 +12,10 @@ text:
   quran_verse_start: 1
   quran_verse_end: 4
 
+  # Fonts
   # From https://github.com/0xzer0x/quran-companion/tree/main/assets/fonts
+  # Also from https://github.com/marwan/indopak-quran-text/blob/master/Fonts/v4.2.2%20-%20NORMAL%20SPACING/With%20Waqf%20Lazim%20Indicator/AlQuran-IndoPak-by-QuranWBW.v.4.2.2-WL.ttf
   # Don't touch these unless you know what you're doing
-  arabic_font_path: "data/01_raw/PakTypeNaskhBasic.ttf"
-  english_font_path: "data/01_raw/NotoSansDisplay.ttf"
-
-  # Adjust this as needed
-  font_size: 72
 
   # Bounding boxes for text - adjust to whatever looks good
   # (0, 0) is top left corner
@@ -26,18 +23,25 @@ text:
   # (1, 0) is bottom left corner
   # (1, 1) is bottom right corner
   # Specify top left and bottom right corners
-  arabic_tl: (0.5, 0.1)
-  arabic_br: (0.9, 0.6)
-  english_tl: (0.1, 0.1)
-  english_br: (0.5, 0.6)
 
-  # Don't touch this
-  english_source: "https://github.com/0xzer0x/quran-companion/raw/refs/heads/main/assets/translations/en_khattab.db"
-  arabic_source: "https://github.com/0xzer0x/quran-companion/raw/refs/heads/main/assets/quran.db"
+  # Don't touch the "source"
 
-  # Adjust these as needed
-  interline_spacing: 200
-  intraline_spacing: 80
+  # Find colors in https://htmlcolorcodes.com/color-names/
+  ar:
+    font_path: "data/01_raw/quran_font.ttf"
+    tl: (0.5, 0.1)
+    br: (0.9, 0.6)
+    source:  "https://github.com/0xzer0x/quran-companion/raw/refs/heads/main/assets/quran.db"
+    color: PowderBlue
 
-# Don't touch this
-output_path: "data/03_primary/quran_poster.png"
+  en:
+    font_path: "data/01_raw/NotoSansDisplay.ttf"
+    tl: (0.1, 0.1)
+    br: (0.5, 0.6)
+    source: "https://github.com/0xzer0x/quran-companion/raw/refs/heads/main/assets/translations/en_khattab.db"
+    color: PowderBlue
+
+  # Adjust this as needed
+  font_size: 72
+
+
