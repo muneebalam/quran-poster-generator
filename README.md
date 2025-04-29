@@ -2,8 +2,6 @@
 
 Given a background and specified ayahs, create a "poster" with English and Arabic.
 
-![example](quran-poster/data/03_primary/quran_poster.png)
-
 # Related work
 
 - [Quran image generator](https://github.com/ZeyadAbbas/quran-image-generator)
@@ -42,6 +40,19 @@ Alternatively, instead of using `base` yamls, create a new folder, and instead o
 ## Examples
 
 `kedro run --env=nur`
+
+![nur](quran-poster/data/03_primary/quran_poster_nur.png)
+
+
+`kedro run --env=mz`
+
+![mz](quran-poster/data/03_primary/quran_poster_mz.png)
+
+
+`kedro run --env=asr`
+
+![asr](quran-poster/data/03_primary/quran_poster_asr.png)
+
 
 # Update log
 
