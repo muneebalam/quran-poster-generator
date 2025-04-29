@@ -1,0 +1,9 @@
+background_image: 
+  type: pillow.ImageDataset
+  filepath: data/01_raw/flame_bg.jpg
+arabic_text_canvas:
+  type: pillow.ImageDataset
+  filepath: data/02_intermediate/arabic_only_poster.png
+arabic_english_text_canvas:
+  type: pillow.ImageDataset
+  filepath: data/03_primary/quran_poster_nur.png
