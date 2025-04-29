@@ -36,6 +36,40 @@ def calculate_space_dimensions_px(background_image_canvas: Image.Image, text_par
     br_px = (br[0] * w_in, br[1] * h_in)
     return br_px[0] - tl_px[0], br_px[1] - tl_px[1]
 
+def _split_single_verse(mytext: str, mywidth: float, lang: str, background_image_canvas: Image.Image,
+                        font_path: str, font_size: int):
+    if lang == "ar":
+        # line = arabic_reshaper.reshape(line)
+        # line = get_display(line, base_dir = "R")
+        pass
+    else:
+        mytext = _clean_text(mytext)
+
+    # See if we need to wrap the text
+    font = ImageFont.truetype(font_path, font_size)
+    draw = ImageDraw.Draw(background_image_canvas)
+    text_w = draw.textlength(mytext, font=font)
+
+    # The end of verse markers showing up as blank - delete
+    if lang == "ar":
+        mytext = mytext[:-2]
+
+    # Deal with long lines
+    if text_w > mywidth:
+        lines = []
+        cur_start = 0 
+        words = mytext.split()
+        for j in range(len(words)):
+            line_w = draw.textlength(" ".join(words[cur_start:j+1]), font=font)
+            if line_w > mywidth:
+                lines.append(" ".join(words[cur_start:j]))
+                cur_start = j
+        if cur_start < len(words):
+            lines.append(" ".join(words[cur_start:]))
+    else:
+        lines = [mytext]
+    return lines
+
 def calculate_line_y_positions(ar_text: str, en_text: str, text_params: dict, background_image_canvas: Image.Image) -> tuple[tuple[int]]:
     ar_lines = ar_text.split("\n")
     en_lines = en_text.split("\n")
@@ -44,23 +78,27 @@ def calculate_line_y_positions(ar_text: str, en_text: str, text_params: dict, ba
     draw = ImageDraw.Draw(background_image_canvas)
 
     top_y = _clean_pos_tuple(text_params["en"]["tl"])[1]
-    space_width, space_height = calculate_space_dimensions_px(background_image_canvas, text_params, "en")
+    space_width_en, space_height_en = calculate_space_dimensions_px(background_image_canvas, text_params, "en")
+    space_width_ar, space_height_ar = calculate_space_dimensions_px(background_image_canvas, text_params, "ar")
+
     lines_by_verse = []
     for i in range(len(ar_lines)):
-        ar_line_w = draw.textlength(ar_lines[i], font=ar_font)
-        en_line_w = draw.textlength(en_lines[i], font=en_font)
-        lines_by_verse.append(max(ar_line_w, en_line_w) // space_width + 2) # to be safe
+        ar_lines_v = _split_single_verse(ar_lines[i], space_width_ar, "ar", background_image_canvas,
+                                       text_params["ar"]["font_path"], text_params["font_size"])
+        en_lines_v = _split_single_verse(en_lines[i], space_width_en, "en", background_image_canvas,
+                                       text_params["en"]["font_path"], text_params["font_size"])
+        lines_by_verse.append(max(len(ar_lines_v), len(en_lines_v)) + 2) # to be safe
 
     line_breaks = len(ar_lines) - 1
     continuations = sum(lines_by_verse) - line_breaks
-    spacing_param = space_height / (3 * line_breaks + 1.3 * continuations)
+    spacing_param = space_height_en / (3 * line_breaks + 1.3 * continuations)
 
     line_y_positions = [[top_y * background_image_canvas.size[1]]]
-    for i in range(line_breaks):
+    for i in range(len(ar_lines)):
         line_y_positions.append([line_y_positions[-1][-1] + 3 * spacing_param])
         for j in range(int(lines_by_verse[i])):
-            line_y_positions[-1].append(line_y_positions[-1][-1] + 1.3 * spacing_param)
-    return (line_y_positions,)
+            line_y_positions[-1].append(line_y_positions[-1][-1] + 1.5 * spacing_param)
+    return (line_y_positions[1:],)
             
 
 # Get text ---------------------------------------------------------------------
@@ -94,9 +132,9 @@ def _get_text(text: dict, lang: str) -> tuple[str]:
         select_col = "aya_text"
     
     verses = pd.read_sql(f"SELECT {select_col} FROM {tblname} WHERE {s_col} = {surah} AND {a_col} BETWEEN {verse_start} AND {verse_end}", conn).squeeze().to_list()
-    if include_basmalah and verse_start != 1:
-        basmalah = pd.read_sql(f"SELECT * FROM {tblname} WHERE {s_col} = 1 AND {a_col} = 1", conn).squeeze().to_list()
-        verses = basmalah + verses
+    if include_basmalah:
+        basmalah = pd.read_sql(f"SELECT {select_col} FROM {tblname} WHERE {s_col} = 1 AND {a_col} = 1", conn).squeeze()
+        verses = [basmalah] + verses
     conn.close()
 
     return "\n".join(verses)
@@ -104,6 +142,7 @@ def _get_text(text: dict, lang: str) -> tuple[str]:
 def _clean_text(text: str) -> str:
     while "<sup" in text:
         text = re.sub(r"<sup.*?</sup>", "", text)
+    text = text.replace("\n", "")
     return text
 
 # Add text ---------------------------------------------------------------------
@@ -122,42 +161,14 @@ def _add_text(background_image_canvas: Image.Image, text: dict, lang: str, saved
     
     space_height = br_px[1] - tl_px[1]
     space_width = br_px[0] - tl_px[0]
+    left = tl_px[0]
+    right = br_px[0]
     font = ImageFont.truetype(font_path, text["font_size"])
     draw = ImageDraw.Draw(background_image_canvas)
-
+    
     for i, line in enumerate(saved_text):
-        if lang == "ar":
-            # line = arabic_reshaper.reshape(line)
-            # line = get_display(line, base_dir = "R")
-            pass
-        else:
-            line = _clean_text(line)
-
-        # See if we need to wrap the text
-        left = tl_px[0]
-        right = br_px[0]
-        text_w = draw.textlength(line, font=font)
-
-        # The end of verse markers showing up as blank - delete
-        if lang == "ar":
-            line = line[:-2]
-
-        # Deal with long lines
-        if text_w > space_width:
-            lines = []
-            cur_start = 0 
-            words = line.split()
-            for j in range(len(words)):
-                line_w = draw.textlength(" ".join(words[cur_start:j+1]), font=font)
-                if line_w > space_width:
-                    lines.append(" ".join(words[cur_start:j]))
-                    cur_start = j
-            if cur_start < len(words):
-                lines.append(" ".join(words[cur_start:]))
-        else:
-            lines = [line]
-        if lang == "ar":
-            pass # lines = lines[::-1]
+        lines = _split_single_verse(line, space_width, lang, background_image_canvas,
+                                    font_path, text["font_size"])
         for j, line in enumerate(lines):
             y_needed = line_y_positions[i][j]
             if lang == "ar":
