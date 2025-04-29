@@ -33,18 +33,18 @@ text:
   ar:
     font_path: "data/01_raw/quran_font.ttf"
     tl: (0.5, 0.05)
-    br: (0.9, 0.8)
+    br: (0.9, 0.7)
     source:  "https://github.com/0xzer0x/quran-companion/raw/refs/heads/main/assets/quran.db"
     color: White
 
   en:
     font_path: "data/01_raw/NotoSansDisplay.ttf"
     tl: (0.1, 0.05)
-    br: (0.5, 0.8)
+    br: (0.5, 0.7)
     source: "https://github.com/0xzer0x/quran-companion/raw/refs/heads/main/assets/translations/en_khattab.db"
     color: White
 
   # Adjust this as needed
-  font_size: 48
+  font_size: 56
 
 

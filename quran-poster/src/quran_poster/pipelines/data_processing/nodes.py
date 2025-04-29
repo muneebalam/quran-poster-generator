@@ -87,7 +87,6 @@ def calculate_line_y_positions(ar_text: str, en_text: str, text_params: dict, ba
                                        text_params["ar"]["font_path"], text_params["font_size"])
         en_lines_v = _split_single_verse(en_lines[i], space_width_en, "en", background_image_canvas,
                                        text_params["en"]["font_path"], text_params["font_size"])
-        print(len(en_lines_v), en_lines_v)
         lines_by_verse.append(max(len(ar_lines_v), len(en_lines_v)) + 2) # to be safe
 
     line_breaks = len(ar_lines) - 1
@@ -98,7 +97,7 @@ def calculate_line_y_positions(ar_text: str, en_text: str, text_params: dict, ba
     for i in range(len(ar_lines)):
         line_y_positions.append([line_y_positions[-1][-1] + 3 * spacing_param])
         for j in range(int(lines_by_verse[i])):
-            line_y_positions[-1].append(line_y_positions[-1][-1] + 1.3 * spacing_param)
+            line_y_positions[-1].append(line_y_positions[-1][-1] + 1.5 * spacing_param)
     return (line_y_positions[1:],)
             
 
