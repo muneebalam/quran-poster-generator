@@ -53,8 +53,12 @@ Alternatively, instead of using `base` yamls, create a new folder, and instead o
 
 ![asr](quran-poster/data/03_primary/quran_poster_asr.png)
 
+`kedro run --env=kahf`
+
+![asr](quran-poster/data/03_primary/quran_poster_kahf.png)
+
 
 # Update log
 
-2025-04-27: first version
-2025-04-28: bug fixes and examples
+- 2025-04-27: first version
+- 2025-04-28: bug fixes and examples
